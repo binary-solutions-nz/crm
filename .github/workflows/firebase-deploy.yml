@@ -45,7 +45,7 @@ jobs:
           cache: 'npm'
 
       - name: Install web dependencies
-        run: npm ci
+        run: npm install
 
       - name: Build web app
         env:
@@ -58,7 +58,7 @@ jobs:
         run: npm run build
 
       - name: Install functions dependencies
-        run: npm --prefix functions ci
+        run: npm --prefix functions install
 
       - name: Write Cloud Functions params (.env)
         run: |
