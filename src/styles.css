@@ -754,6 +754,74 @@ textarea {
   font-size: 14px;
 }
 
+/* ---- Data tools (import / export) ------------------------------------------ */
+
+.data-tools-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 18px;
+  align-items: start;
+}
+.data-tools-body {
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.data-tools-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.import-mode-row {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.import-mode-option {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.import-mode-option input {
+  width: auto;
+  margin-top: 3px;
+}
+.import-mode-option strong {
+  font-size: 14px;
+}
+.import-mode-option p {
+  margin: 4px 0 0;
+}
+
+.import-summary {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.import-preview {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.import-preview-table {
+  max-height: 360px;
+  overflow-y: auto;
+}
+.import-errors {
+  color: var(--danger);
+  font-size: 13px;
+}
+.notice-warn {
+  background: var(--amber-bg);
+  color: var(--amber-fg);
+}
+
 /* ---- Responsive ----------------------------------------------------------- */
 
 @media (max-width: 860px) {

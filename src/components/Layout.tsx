@@ -8,6 +8,7 @@ const NAV = [
   { to: '/subscriptions', label: 'Subscriptions', icon: '⟳' },
   { to: '/services', label: 'Services', icon: '⚙' },
   { to: '/renewals', label: 'Renewals', icon: '⏰' },
+  { to: '/data-tools', label: 'Import / Export', icon: '⇅' },
 ];
 
 export default function Layout({ children }: { children: ReactNode }) {
