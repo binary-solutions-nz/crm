@@ -762,6 +762,24 @@ textarea {
   gap: 18px;
   align-items: start;
 }
+.data-tools-grid-spaced {
+  margin-bottom: 28px;
+}
+.section-intro {
+  margin-bottom: 14px;
+}
+.section-heading {
+  font-size: 16px;
+  margin: 0 0 4px;
+}
+.import-collection-block {
+  border-top: 1px solid var(--border);
+  padding-top: 14px;
+}
+.import-collection-heading {
+  font-size: 14px;
+  margin: 0 0 10px;
+}
 .data-tools-body {
   padding: 18px;
   display: flex;

@@ -6,7 +6,11 @@ import { collection, deleteField, doc, writeBatch } from 'firebase/firestore';
 import { db } from '../firebase';
 import type { Client } from '../types';
 import type { WithId } from './firestore';
-import type { EntityConfig, FieldConfig } from './entityConfig';
+import { ENTITY_CONFIGS, getEntityConfig, type EntityConfig, type EntityKey, type FieldConfig } from './entityConfig';
+
+// Order collections must be imported in so client references resolve before
+// the records that point at them are processed.
+export const ENTITY_IMPORT_ORDER: EntityKey[] = ['clients', 'contacts', 'devices', 'services', 'subscriptions'];
 
 export const EXPORT_META_HEADERS = ['id', 'clientId', 'clientName', 'createdAt', 'updatedAt'] as const;
 
@@ -45,6 +49,95 @@ export function buildExportRecords(
     rec.updatedAt = row.updatedAt ? new Date(row.updatedAt as number).toISOString() : '';
     return rec;
   });
+}
+
+// ---- Combined "entire dataset" file (one CSV, all collections) -------------
+//
+// CSV can't hold multiple sheets, so the whole-dataset file is a single flat
+// table with a leading `collection` column that says which entity each row
+// belongs to, and a header row that's the union of every entity's columns.
+// A handful of column names are intentionally reused across entities (e.g.
+// `name`, `status`) — they're only ever interpreted against the schema of
+// the entity named in that row's `collection` column, so this is safe.
+
+export const COLLECTION_COLUMN = 'collection';
+
+export function combinedExportHeaders(): string[] {
+  const seen = new Set<string>([COLLECTION_COLUMN, 'id', 'clientId', 'clientName', 'createdAt', 'updatedAt']);
+  const headers = [COLLECTION_COLUMN, 'id', 'clientId', 'clientName'];
+  for (const entity of ENTITY_CONFIGS) {
+    for (const f of entity.fields) {
+      if (!seen.has(f.header)) {
+        seen.add(f.header);
+        headers.push(f.header);
+      }
+    }
+  }
+  headers.push('createdAt', 'updatedAt');
+  return headers;
+}
+
+export function buildCombinedExportRecords(
+  parts: { entity: EntityConfig; docs: (WithId & Record<string, unknown>)[] }[],
+  clientsById: Map<string, Client>
+): Record<string, string>[] {
+  const all: Record<string, string>[] = [];
+  for (const { entity, docs } of parts) {
+    for (const rec of buildExportRecords(entity, docs, clientsById)) {
+      all.push({ [COLLECTION_COLUMN]: entity.key, ...rec });
+    }
+  }
+  return all;
+}
+
+export function combinedTemplateRow(entity: EntityConfig, exampleClientName: string): Record<string, string> {
+  const row: Record<string, string> = { [COLLECTION_COLUMN]: entity.key, id: '' };
+  if (entity.hasClientRef) {
+    row.clientId = '';
+    row.clientName = exampleClientName;
+  }
+  for (const f of entity.fields) row[f.header] = f.example;
+  row.createdAt = '';
+  row.updatedAt = '';
+  return row;
+}
+
+export interface CombinedPart {
+  entity: EntityConfig;
+  records: Record<string, string>[];
+}
+
+// Splits a parsed combined CSV into one record group per recognised
+// `collection` value, ordered so client references resolve on import.
+export function splitCombinedRecords(records: Record<string, string>[]): {
+  parts: CombinedPart[];
+  unmatchedCount: number;
+} {
+  const groups = new Map<EntityKey, Record<string, string>[]>();
+  let unmatchedCount = 0;
+  for (const r of records) {
+    const key = (r[COLLECTION_COLUMN] ?? '').trim().toLowerCase() as EntityKey;
+    const entity = ENTITY_CONFIGS.find((e) => e.key === key);
+    if (!entity) {
+      unmatchedCount++;
+      continue;
+    }
+    const arr = groups.get(entity.key) ?? [];
+    arr.push(r);
+    groups.set(entity.key, arr);
+  }
+  const parts = ENTITY_IMPORT_ORDER.filter((k) => groups.has(k)).map((k) => ({
+    entity: getEntityConfig(k),
+    records: groups.get(k)!,
+  }));
+  return { parts, unmatchedCount };
+}
+
+// Tags each record with its original CSV line number (before grouping
+// scatters them across entities) so preview/error UI can point back at the
+// exact row in the source file.
+export function tagLineNumbers(records: Record<string, string>[]): Record<string, string>[] {
+  return records.map((r, i) => ({ ...r, __line: String(i + 2) }));
 }
 
 // ---- Import: validation + coercion -----------------------------------------
