@@ -19,7 +19,7 @@ export default function Layout({ children }: { children: ReactNode }) {
     <div className="app-shell">
       <aside className={`sidebar${open ? ' sidebar-open' : ''}`}>
         <div className="sidebar-brand">
-          <span className="sidebar-logo">B</span>
+          <img className="sidebar-logo" src="/logo.png" alt="Binary Solutions" />
           <div className="sidebar-brand-text">
             <strong>Binary Solutions</strong>
             <span>IT Support CRM</span>
