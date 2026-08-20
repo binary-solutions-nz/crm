@@ -153,14 +153,18 @@ a {
 .sidebar-logo,
 .login-logo {
   display: block;
-  width: 40px;
   height: 40px;
-  object-fit: contain;
+  width: auto;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 5px 7px;
   flex-shrink: 0;
 }
 .login-logo {
-  width: 56px;
-  height: 56px;
+  height: 60px;
+  padding: 7px 10px;
+  border-radius: 10px;
 }
 .sidebar-brand-text {
   display: flex;
