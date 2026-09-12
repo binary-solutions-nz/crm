@@ -159,13 +159,15 @@ export default function Renewals() {
             <tbody>
               {items.map((it) => (
                 <tr key={it.id}>
-                  <td>
+                  <td data-label="Due">
                     <RenewalBadge date={it.date}>{relativeRenewal(it.date)}</RenewalBadge>
                   </td>
-                  <td>{formatDate(it.date)}</td>
-                  <td className="cell-strong">{it.name}</td>
-                  <td>{it.kind}</td>
-                  <td>
+                  <td data-label="Date">{formatDate(it.date)}</td>
+                  <td className="cell-strong cell-primary" data-label="Item">
+                    {it.name}
+                  </td>
+                  <td data-label="Type">{it.kind}</td>
+                  <td data-label="Client">
                     {clientMap[it.clientId] ? (
                       <Link to={`/clients/${it.clientId}`} className="link">
                         {clientMap[it.clientId]}
@@ -174,8 +176,8 @@ export default function Renewals() {
                       '—'
                     )}
                   </td>
-                  <td>{it.detail || '—'}</td>
-                  <td>{formatMoney(it.cost)}</td>
+                  <td data-label="Detail">{it.detail || '—'}</td>
+                  <td data-label="Cost">{formatMoney(it.cost)}</td>
                 </tr>
               ))}
             </tbody>

@@ -47,6 +47,16 @@ export default function Layout({ children }: { children: ReactNode }) {
           <div className="sidebar-user" title={user?.email ?? ''}>
             {user?.email}
           </div>
+          <NavLink
+            to="/account"
+            className={({ isActive }) => `nav-link${isActive ? ' nav-link-active' : ''}`}
+            onClick={() => setOpen(false)}
+          >
+            <span className="nav-icon" aria-hidden>
+              ⚙
+            </span>
+            My account
+          </NavLink>
           <button className="btn btn-ghost btn-block" onClick={() => logout()}>
             Sign out
           </button>

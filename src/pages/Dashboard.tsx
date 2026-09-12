@@ -126,14 +126,16 @@ export default function Dashboard() {
               <tbody>
                 {upcoming.map((s) => (
                   <tr key={s.id}>
-                    <td>
+                    <td data-label="Due">
                       <RenewalBadge date={s.renewalDate}>
                         {relativeRenewal(s.renewalDate)}
                       </RenewalBadge>
                     </td>
-                    <td>{formatDate(s.renewalDate)}</td>
-                    <td className="cell-strong">{s.name}</td>
-                    <td>
+                    <td data-label="Date">{formatDate(s.renewalDate)}</td>
+                    <td className="cell-strong cell-primary" data-label="Subscription">
+                      {s.name}
+                    </td>
+                    <td data-label="Client">
                       {clientMap[s.clientId] ? (
                         <Link to={`/clients/${s.clientId}`} className="link">
                           {clientMap[s.clientId]}
@@ -142,8 +144,8 @@ export default function Dashboard() {
                         '—'
                       )}
                     </td>
-                    <td>{SUBSCRIPTION_CATEGORY_LABELS[s.category]}</td>
-                    <td>{formatMoney(s.cost)}</td>
+                    <td data-label="Category">{SUBSCRIPTION_CATEGORY_LABELS[s.category]}</td>
+                    <td data-label="Cost">{formatMoney(s.cost)}</td>
                   </tr>
                 ))}
               </tbody>

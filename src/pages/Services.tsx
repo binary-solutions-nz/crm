@@ -105,8 +105,10 @@ export default function Services() {
             <tbody>
               {filtered.map((s) => (
                 <tr key={s.id}>
-                  <td className="cell-strong">{s.name}</td>
-                  <td>
+                  <td className="cell-strong cell-primary" data-label="Service">
+                    {s.name}
+                  </td>
+                  <td data-label="Client">
                     {clientMap[s.clientId] ? (
                       <Link to={`/clients/${s.clientId}`} className="link">
                         {clientMap[s.clientId].name}
@@ -115,10 +117,10 @@ export default function Services() {
                       '—'
                     )}
                   </td>
-                  <td>{s.category ?? '—'}</td>
-                  <td>{formatMoney(s.cost)}</td>
-                  <td>{s.billingCycle ? BILLING_CYCLE_LABELS[s.billingCycle] : '—'}</td>
-                  <td>
+                  <td data-label="Category">{s.category ?? '—'}</td>
+                  <td data-label="Cost">{formatMoney(s.cost)}</td>
+                  <td data-label="Billing">{s.billingCycle ? BILLING_CYCLE_LABELS[s.billingCycle] : '—'}</td>
+                  <td data-label="Status">
                     <StatusBadge status={s.status} />
                   </td>
                   <td className="col-actions">

@@ -120,12 +120,14 @@ export default function Subscriptions() {
             <tbody>
               {filtered.map((s) => (
                 <tr key={s.id}>
-                  <td>
+                  <td data-label="Renewal">
                     <RenewalBadge date={s.renewalDate}>{relativeRenewal(s.renewalDate)}</RenewalBadge>
                     <div className="cell-sub">{formatDate(s.renewalDate)}</div>
                   </td>
-                  <td className="cell-strong">{s.name}</td>
-                  <td>
+                  <td className="cell-strong cell-primary" data-label="Name">
+                    {s.name}
+                  </td>
+                  <td data-label="Client">
                     {clientMap[s.clientId] ? (
                       <Link to={`/clients/${s.clientId}`} className="link">
                         {clientMap[s.clientId].name}
@@ -134,12 +136,12 @@ export default function Subscriptions() {
                       '—'
                     )}
                   </td>
-                  <td>{s.vendor ?? '—'}</td>
-                  <td>{SUBSCRIPTION_CATEGORY_LABELS[s.category]}</td>
-                  <td>{s.seats ?? '—'}</td>
-                  <td>{formatMoney(s.cost)}</td>
-                  <td>{s.autoRenew ? '✓' : '—'}</td>
-                  <td>
+                  <td data-label="Vendor">{s.vendor ?? '—'}</td>
+                  <td data-label="Category">{SUBSCRIPTION_CATEGORY_LABELS[s.category]}</td>
+                  <td data-label="Seats">{s.seats ?? '—'}</td>
+                  <td data-label="Cost">{formatMoney(s.cost)}</td>
+                  <td data-label="Auto">{s.autoRenew ? '✓' : '—'}</td>
+                  <td data-label="Status">
                     <StatusBadge status={s.status} />
                   </td>
                   <td className="col-actions">

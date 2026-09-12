@@ -246,16 +246,18 @@ function SubscriptionsTab({ clientId }: { clientId: string }) {
             <tbody>
               {data.map((s) => (
                 <tr key={s.id}>
-                  <td>
+                  <td data-label="Renewal">
                     <RenewalBadge date={s.renewalDate}>{relativeRenewal(s.renewalDate)}</RenewalBadge>
                     <div className="cell-sub">{formatDate(s.renewalDate)}</div>
                   </td>
-                  <td className="cell-strong">{s.name}</td>
-                  <td>{s.vendor ?? '—'}</td>
-                  <td>{SUBSCRIPTION_CATEGORY_LABELS[s.category]}</td>
-                  <td>{s.seats ?? '—'}</td>
-                  <td>{formatMoney(s.cost)}</td>
-                  <td>
+                  <td className="cell-strong cell-primary" data-label="Name">
+                    {s.name}
+                  </td>
+                  <td data-label="Vendor">{s.vendor ?? '—'}</td>
+                  <td data-label="Category">{SUBSCRIPTION_CATEGORY_LABELS[s.category]}</td>
+                  <td data-label="Seats">{s.seats ?? '—'}</td>
+                  <td data-label="Cost">{formatMoney(s.cost)}</td>
+                  <td data-label="Status">
                     <StatusBadge status={s.status} />
                   </td>
                   <td className="col-actions">
@@ -348,11 +350,13 @@ function ServicesTab({ clientId }: { clientId: string }) {
             <tbody>
               {data.map((s) => (
                 <tr key={s.id}>
-                  <td className="cell-strong">{s.name}</td>
-                  <td>{s.category ?? '—'}</td>
-                  <td>{formatMoney(s.cost)}</td>
-                  <td>{s.billingCycle ? BILLING_CYCLE_LABELS[s.billingCycle] : '—'}</td>
-                  <td>
+                  <td className="cell-strong cell-primary" data-label="Service">
+                    {s.name}
+                  </td>
+                  <td data-label="Category">{s.category ?? '—'}</td>
+                  <td data-label="Cost">{formatMoney(s.cost)}</td>
+                  <td data-label="Billing">{s.billingCycle ? BILLING_CYCLE_LABELS[s.billingCycle] : '—'}</td>
+                  <td data-label="Status">
                     <StatusBadge status={s.status} />
                   </td>
                   <td className="col-actions">
@@ -445,11 +449,13 @@ function UsersTab({ clientId }: { clientId: string }) {
             <tbody>
               {data.map((c) => (
                 <tr key={c.id}>
-                  <td className="cell-strong">{c.name}</td>
-                  <td>{c.role ?? '—'}</td>
-                  <td>{c.email ?? '—'}</td>
-                  <td>{c.phone ?? '—'}</td>
-                  <td>{c.isPrimary ? '✓' : '—'}</td>
+                  <td className="cell-strong cell-primary" data-label="Name">
+                    {c.name}
+                  </td>
+                  <td data-label="Role">{c.role ?? '—'}</td>
+                  <td data-label="Email">{c.email ?? '—'}</td>
+                  <td data-label="Phone">{c.phone ?? '—'}</td>
+                  <td data-label="Primary">{c.isPrimary ? '✓' : '—'}</td>
                   <td className="col-actions">
                     <button className="btn-icon" onClick={() => setEditing(c)} title="Edit">
                       ✎
@@ -542,19 +548,21 @@ function DevicesTab({ clientId }: { clientId: string }) {
             <tbody>
               {data.map((d) => (
                 <tr key={d.id}>
-                  <td className="cell-strong">{d.hostname}</td>
-                  <td>{DEVICE_TYPE_LABELS[d.type]}</td>
-                  <td>{d.os ?? '—'}</td>
-                  <td>{d.assignedTo ?? '—'}</td>
-                  <td>{d.serialNumber ?? '—'}</td>
-                  <td>
+                  <td className="cell-strong cell-primary" data-label="Hostname">
+                    {d.hostname}
+                  </td>
+                  <td data-label="Type">{DEVICE_TYPE_LABELS[d.type]}</td>
+                  <td data-label="OS">{d.os ?? '—'}</td>
+                  <td data-label="Assigned to">{d.assignedTo ?? '—'}</td>
+                  <td data-label="Serial">{d.serialNumber ?? '—'}</td>
+                  <td data-label="Warranty">
                     {d.warrantyExpiry ? (
                       <RenewalBadge date={d.warrantyExpiry}>{formatDate(d.warrantyExpiry)}</RenewalBadge>
                     ) : (
                       '—'
                     )}
                   </td>
-                  <td>
+                  <td data-label="Status">
                     <StatusBadge status={d.status} />
                   </td>
                   <td className="col-actions">

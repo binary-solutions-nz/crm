@@ -103,12 +103,16 @@ export default function Clients() {
                   className="row-clickable"
                   onClick={() => navigate(`/clients/${c.id}`)}
                 >
-                  <td className="cell-strong">{c.name}</td>
-                  <td className="cell-capitalise">{c.type}</td>
-                  <td>{c.primaryContactName ?? '—'}</td>
-                  <td>{c.email ?? '—'}</td>
-                  <td>{c.phone ?? '—'}</td>
-                  <td>
+                  <td className="cell-strong cell-primary" data-label="Name">
+                    {c.name}
+                  </td>
+                  <td className="cell-capitalise" data-label="Type">
+                    {c.type}
+                  </td>
+                  <td data-label="Primary contact">{c.primaryContactName ?? '—'}</td>
+                  <td data-label="Email">{c.email ?? '—'}</td>
+                  <td data-label="Phone">{c.phone ?? '—'}</td>
+                  <td data-label="Status">
                     <StatusBadge status={c.status} />
                   </td>
                   <td className="col-actions" onClick={(e) => e.stopPropagation()}>

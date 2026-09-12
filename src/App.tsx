@@ -10,6 +10,7 @@ import Subscriptions from './pages/Subscriptions';
 import Services from './pages/Services';
 import Renewals from './pages/Renewals';
 import DataTools from './pages/DataTools';
+import Account from './pages/Account';
 
 export default function App() {
   const { user, loading } = useAuth();
@@ -36,6 +37,7 @@ export default function App() {
         <Route path="/services" element={<Services />} />
         <Route path="/renewals" element={<Renewals />} />
         <Route path="/data-tools" element={<DataTools />} />
+        <Route path="/account" element={<Account />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Layout>

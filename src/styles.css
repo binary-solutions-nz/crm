@@ -21,11 +21,19 @@
   --radius: 10px;
   --shadow: 0 1px 3px rgba(16, 24, 40, 0.08), 0 1px 2px rgba(16, 24, 40, 0.04);
   --sidebar-w: 240px;
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 * {
   box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
 }
 
 body {
@@ -34,10 +42,17 @@ body {
   color: var(--text);
   font-size: 14px;
   line-height: 1.5;
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior-y: contain;
 }
 
 a {
   color: inherit;
+}
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
 }
 
 .link {
@@ -522,6 +537,9 @@ textarea {
 .modal-wide {
   max-width: 620px;
 }
+.modal-drag-handle {
+  display: none;
+}
 .modal-header {
   display: flex;
   align-items: center;
@@ -539,6 +557,8 @@ textarea {
   font-size: 16px;
   cursor: pointer;
   color: var(--text-muted);
+  min-width: 32px;
+  min-height: 32px;
 }
 .modal-body {
   padding: 20px;
@@ -644,6 +664,14 @@ textarea {
   font-size: 13px;
   margin: 0;
   background: var(--red-bg);
+  padding: 8px 10px;
+  border-radius: 8px;
+}
+.form-success {
+  color: var(--green-fg);
+  font-size: 13px;
+  margin: 0;
+  background: var(--green-bg);
   padding: 8px 10px;
   border-radius: 8px;
 }
@@ -758,7 +786,8 @@ textarea {
 
 /* ---- Data tools (import / export) ------------------------------------------ */
 
-.data-tools-grid {
+.data-tools-grid,
+.panel-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
   gap: 18px;
@@ -782,7 +811,8 @@ textarea {
   font-size: 14px;
   margin: 0 0 10px;
 }
-.data-tools-body {
+.data-tools-body,
+.panel-body {
   padding: 18px;
   display: flex;
   flex-direction: column;
@@ -842,12 +872,19 @@ textarea {
   color: var(--amber-fg);
 }
 
-/* ---- Responsive ----------------------------------------------------------- */
+/* ---- Responsive ------------------------------------------------------------
+   Mobile-first breakpoints:
+   - 860px: app shell switches from fixed sidebar to a slide-in drawer + topbar
+   - 640px: data tables switch from horizontal-scroll tables to stacked cards
+------------------------------------------------------------------------------- */
 
 @media (max-width: 860px) {
   .sidebar {
+    width: min(280px, 85vw);
     transform: translateX(-100%);
-    transition: transform 0.2s ease;
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-top: var(--safe-top);
+    padding-bottom: var(--safe-bottom);
   }
   .sidebar-open {
     transform: translateX(0);
@@ -857,9 +894,19 @@ textarea {
   }
   .topbar {
     display: flex;
+    padding-top: calc(12px + var(--safe-top));
+    padding-left: calc(16px + var(--safe-left));
+    padding-right: calc(16px + var(--safe-right));
+  }
+  .menu-toggle {
+    min-width: 44px;
+    min-height: 44px;
   }
   .content {
-    padding: 20px 16px;
+    padding: 18px 16px calc(24px + var(--safe-bottom));
+    padding-left: calc(16px + var(--safe-left));
+    padding-right: calc(16px + var(--safe-right));
+    max-width: 100%;
   }
   .sidebar-open + .main-area .sidebar-scrim,
   .sidebar-scrim {
@@ -868,5 +915,284 @@ textarea {
     inset: 0;
     background: rgba(0, 0, 0, 0.4);
     z-index: 35;
+    animation: scrim-fade-in 0.2s ease;
+  }
+
+  /* Bigger, thumb-friendly nav rows in the drawer */
+  .nav-link {
+    padding: 13px 14px;
+    font-size: 15px;
+    min-height: 44px;
+  }
+  .sidebar-footer .btn {
+    min-height: 44px;
+  }
+
+  /* Page chrome */
+  .page-header {
+    flex-wrap: wrap;
+  }
+  .page-actions {
+    width: 100%;
+  }
+  .page-actions .btn {
+    width: 100%;
+  }
+
+  /* Toolbar: search + filters stack full-width and stay easy to tap */
+  .toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .toolbar > .search-input,
+  .toolbar > select {
+    min-width: 0;
+    width: 100%;
+  }
+
+  /* Inputs at 16px stop iOS Safari from auto-zooming on focus */
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  /* Touch targets */
+  .btn {
+    min-height: 44px;
+  }
+  .btn-sm {
+    min-height: 38px;
+  }
+  .btn-icon {
+    min-width: 40px;
+    min-height: 40px;
+    font-size: 17px;
+  }
+
+  /* KPI cards: two per row instead of forcing a squeeze */
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+  .kpi-value {
+    font-size: 22px;
+  }
+
+  /* Client-detail tabs scroll horizontally instead of wrapping awkwardly */
+  .tabs {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+  }
+  .tab {
+    scroll-snap-align: start;
+    white-space: nowrap;
+    min-height: 44px;
+  }
+  .detail-header {
+    flex-wrap: wrap;
+  }
+  .detail-header .btn {
+    width: 100%;
+  }
+
+  /* Forms: one field per row, full-width stacked action buttons */
+  .field-row {
+    grid-template-columns: 1fr;
+  }
+  .modal-actions {
+    flex-direction: column-reverse;
+  }
+  .modal-actions .btn {
+    width: 100%;
+  }
+
+  /* Login */
+  .login-shell {
+    padding: calc(16px + var(--safe-top)) 16px calc(16px + var(--safe-bottom));
+  }
+  .login-card {
+    padding: 24px 20px;
+  }
+}
+
+@keyframes scrim-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ---- Modal → bottom sheet on mobile ----------------------------------------- */
+
+@media (max-width: 860px) {
+  .modal-backdrop {
+    align-items: flex-end;
+    padding: 0;
+  }
+  .modal-card,
+  .modal-wide {
+    max-width: 100%;
+    width: 100%;
+    max-height: 92vh;
+    display: flex;
+    flex-direction: column;
+    border-radius: 16px 16px 0 0;
+    animation: sheet-slide-up 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-bottom: var(--safe-bottom);
+  }
+  .modal-drag-handle {
+    display: flex;
+    justify-content: center;
+    padding: 8px 0 2px;
+    touch-action: none;
+    cursor: grab;
+  }
+  .modal-drag-handle::before {
+    content: '';
+    width: 36px;
+    height: 4px;
+    border-radius: 999px;
+    background: var(--border);
+  }
+  .modal-header {
+    padding: 8px 16px 14px;
+  }
+  .modal-close {
+    min-width: 40px;
+    min-height: 40px;
+  }
+  .modal-body {
+    padding: 16px;
+    overflow-y: auto;
+    flex: 1;
+  }
+  .modal-actions {
+    position: sticky;
+    bottom: 0;
+    margin-top: 16px;
+    padding-top: 12px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+  }
+}
+
+@keyframes sheet-slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* ---- Data tables → stacked cards on phones ---------------------------------- */
+
+@media (max-width: 640px) {
+  .table-wrap {
+    overflow: visible;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    border-radius: 0;
+  }
+  .data-table,
+  .data-table tbody {
+    display: block;
+    width: 100%;
+  }
+  .data-table thead {
+    display: none;
+  }
+  .data-table tr {
+    display: block;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    margin-bottom: 12px;
+    overflow: hidden;
+  }
+  .data-table tr:last-child {
+    margin-bottom: 0;
+  }
+  .data-table td {
+    display: block;
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+    white-space: normal;
+    width: auto;
+  }
+  .data-table td:last-child {
+    border-bottom: none;
+  }
+  .data-table td::before {
+    content: attr(data-label);
+    display: block;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--text-muted);
+    margin-bottom: 3px;
+  }
+  /* The first, "title" cell of each card skips the label and reads like a header */
+  .data-table td.cell-primary {
+    padding: 13px 14px;
+    background: var(--bg);
+    font-size: 15px;
+  }
+  .data-table td.cell-primary::before {
+    content: none;
+  }
+  /* Row actions become a full-width footer strip of equal, tappable buttons */
+  .data-table td.col-actions {
+    display: flex;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+  .data-table td.col-actions::before {
+    content: none;
+  }
+  .data-table td.col-actions .btn-icon {
+    flex: 1;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    min-height: 42px;
+    font-size: 16px;
+  }
+
+  /* The CSV import preview stays a real (scrollable) table — its columns are
+     dynamic per-entity, not a fixed card shape. */
+  .import-preview-table {
+    overflow-x: auto;
+  }
+  .import-preview-table .data-table {
+    display: table;
+  }
+  .import-preview-table .data-table thead {
+    display: table-header-group;
+  }
+  .import-preview-table .data-table tbody {
+    display: table-row-group;
+  }
+  .import-preview-table .data-table tr {
+    display: table-row;
+    background: none;
+    border: none;
+    box-shadow: none;
+    margin: 0;
+  }
+  .import-preview-table .data-table td {
+    display: table-cell;
+    padding: 8px 10px;
+  }
+  .import-preview-table .data-table td::before {
+    content: none;
   }
 }
