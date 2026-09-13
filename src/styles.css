@@ -168,31 +168,38 @@ a {
 .sidebar-logo,
 .login-logo {
   display: block;
-  height: 40px;
+  height: 44px;
   width: auto;
   background: #fff;
   border: 1px solid var(--border);
   border-radius: 8px;
-  padding: 5px 7px;
+  padding: 4px 6px;
   flex-shrink: 0;
 }
 .login-logo {
-  height: 60px;
-  padding: 7px 10px;
-  border-radius: 10px;
+  height: 84px;
+  padding: 8px 12px;
+  border-radius: 12px;
 }
 .sidebar-brand-text {
   display: flex;
   flex-direction: column;
   line-height: 1.25;
+  min-width: 0;
 }
 .sidebar-brand-text strong {
   color: #fff;
   font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .sidebar-brand-text span {
   font-size: 12px;
   color: #94a3b8;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .sidebar-nav {
@@ -263,8 +270,17 @@ a {
   font-size: 20px;
   cursor: pointer;
 }
+.topbar-logo {
+  height: 28px;
+  width: auto;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
 .topbar-title {
   font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .content {

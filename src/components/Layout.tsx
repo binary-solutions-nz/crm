@@ -72,6 +72,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           >
             ☰
           </button>
+          <img className="topbar-logo" src="/logo.png" alt="" aria-hidden />
           <span className="topbar-title">Binary Solutions CRM</span>
         </header>
         <main className="content">{children}</main>
