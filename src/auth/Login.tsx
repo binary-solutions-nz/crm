@@ -25,11 +25,8 @@ export default function Login() {
     <div className="login-shell">
       <form className="login-card" onSubmit={handleSubmit}>
         <div className="login-brand">
+          <h1 className="visually-hidden">Binary Solutions — IT Support CRM</h1>
           <img className="login-logo" src="/logo.png" alt="Binary Solutions" />
-          <div>
-            <h1>Binary Solutions</h1>
-            <p>IT Support CRM</p>
-          </div>
         </div>
 
         <label>
