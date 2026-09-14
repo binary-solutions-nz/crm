@@ -166,17 +166,15 @@ a {
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 /* The logo artwork is a square badge: the mark on top, "Binary Solutions"
-   and a tagline underneath. In tight header spots (sidebar, mobile topbar)
-   we only have room for the mark, so we crop to its top ~60% with
-   object-fit/object-position instead of squeezing the tagline text down
-   to illegibility. The login screen has real room, so it gets the full
-   square badge instead. */
+   and a tagline underneath. Shown uncropped (object-fit: contain) even in
+   tight header spots (sidebar, mobile topbar) per explicit request — the
+   tagline text will not be legible at this size, only the login screen's
+   larger badge reads clearly. */
 .sidebar-logo {
   display: block;
   width: 72px;
   height: 44px;
-  object-fit: cover;
-  object-position: 50% 0%;
+  object-fit: contain;
   background: #fff;
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -297,8 +295,7 @@ a {
 .topbar-logo {
   width: 46px;
   height: 28px;
-  object-fit: cover;
-  object-position: 50% 0%;
+  object-fit: contain;
   border-radius: 4px;
   flex-shrink: 0;
 }
